@@ -1,5 +1,6 @@
 "use client";
 
+import { useRedirectIfAuthenticated } from "@/hooks/useRedirectIfAuthenticated";
 // import Image from "next/image";
 import { Toaster } from "sonner";
 
@@ -8,6 +9,7 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
+  useRedirectIfAuthenticated();
   return (
     <>
       <Toaster richColors />
