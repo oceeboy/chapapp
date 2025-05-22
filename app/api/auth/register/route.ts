@@ -83,7 +83,7 @@ export async function POST(req: Request) {
       [
         serialize("accessToken", accessToken, {
           ...cookieOptions,
-          maxAge: 60 * 60 * 24 * 2, // 2 days
+          maxAge: 60 * 15, // 15 minutes // 2 days
         }),
         serialize("refreshToken", refreshToken, {
           ...cookieOptions,
@@ -93,8 +93,7 @@ export async function POST(req: Request) {
     );
 
     return response;
-  } catch (error) {
-    console.error("Registration error:", error); // Optional: helpful in dev
+  } catch {
     return NextResponse.json({ error: "Failed to register" }, { status: 500 });
   }
 }

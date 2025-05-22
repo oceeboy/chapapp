@@ -9,4 +9,7 @@ const conversationschema = z.object({
   participantId: z.string(),
 });
 
-export { chatSchema, conversationschema };
+const typingSchema = z.object({
+  conversationId: z.string(),
+});
+export { chatSchema, conversationschema, typingSchema };

@@ -30,8 +30,7 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("POST /status/read error:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to update read status" },
       { status: 500 }

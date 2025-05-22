@@ -17,7 +17,7 @@ export async function GET() {
 
     /* ---------- Fetch the user ---------- */
     const user = await User.findById(userId).select(
-      "-password -otp -__v -account"
+      "-password  -__v -conversations"
     ); // ① correct call
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });

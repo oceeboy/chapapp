@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { useMessageById } from "../../hooks";
+import { useMessageById, useTypingById } from "../../hooks";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,6 +11,8 @@ import http from "@/lib/ky";
 export function MessageList({ conversationId }: { conversationId: string }) {
   const { data: messages } = useMessageById(conversationId);
   const endRef = useRef<HTMLDivElement>(null);
+
+  const { data: typingUser } = useTypingById(conversationId);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -104,6 +106,27 @@ export function MessageList({ conversationId }: { conversationId: string }) {
               </motion.div>
             );
           })}
+          {typingUser?.typingUser && (
+            <motion.div
+              key="typing-indicator"
+              initial={{ opacity: 0, translateY: 10 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex items-center mb-4 gap-2"
+            >
+              <Avatar className="w-9 h-9">
+                <AvatarFallback className="bg-muted text-muted-foreground">
+                  {typingUser?.typingUser?.[0] ?? "?"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="bg-muted text-muted-foreground px-4 py-2 text-sm rounded-2xl max-w-xs">
+                <span className="italic">
+                  {typingUser.typingUser} is typing...
+                </span>
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
         <div ref={endRef} />
       </div>

@@ -20,7 +20,7 @@ async function createChat(data: ChatSchema) {
     }
 
     // Fallback for non-HTTPError types (ensures function always throws or returns)
-    throw new Error("An unknown error occurred while requesting the loan.");
+    throw new Error("An unknown error occurred while creating a chat.");
   }
 }
 

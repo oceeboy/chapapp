@@ -97,7 +97,6 @@ export function useAuthentication() {
         user: response.user,
       };
     } catch (error: unknown) {
-      console.error("LIB/ACTION/USER.ACTIONS", error);
       const isHTTPError = error instanceof HTTPError;
       const status = isHTTPError ? error.response?.status : null;
       let message = "Failed to register";

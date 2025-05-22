@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import React, { useRef, useState } from "react";
 // your mutation hook
 import { cn } from "@/lib/utils";
-import { useCreateChat } from "../../hooks";
+import { useCreateChat, useTyping } from "../../hooks";
 
 interface MessageInputProps {
   conversationId: string;
@@ -12,7 +12,17 @@ interface MessageInputProps {
 export function MessageInput({ conversationId }: MessageInputProps) {
   const [message, setMessage] = useState("");
   const mutation = useCreateChat();
+  const typingMutation = useTyping();
 
+  const lastTypingTimeRef = useRef<number>(0);
+  const typingDelay = 100; // for delay maybe 1500 or 2000 for instance 0
+  const sendTypingSignal = () => {
+    const now = Date.now();
+    if (now - lastTypingTimeRef.current < typingDelay) return;
+
+    lastTypingTimeRef.current = now;
+    typingMutation.mutate({ data: { conversationId } });
+  };
   const handleSend = () => {
     const trimmed = message.trim();
     if (!trimmed || mutation.isPending) return;
@@ -24,7 +34,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
       },
     });
 
-    setMessage(""); // Clear input after send
+    setMessage("");
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -33,7 +43,10 @@ export function MessageInput({ conversationId }: MessageInputProps) {
       handleSend();
     }
   };
-
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(e.target.value);
+    sendTypingSignal();
+  };
   return (
     <div className="flex items-center border-t px-4 py-2 bg-white">
       <input
@@ -41,7 +54,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
         placeholder="Type a message"
         className="flex-1 rounded-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 mr-2"
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={handleChange}
         onKeyDown={handleKeyPress}
         disabled={mutation.isPending}
       />

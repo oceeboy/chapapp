@@ -48,8 +48,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ message: "conversation started", conversation });
-  } catch (error) {
-    console.error("POST /conversations error:", error);
+  } catch {
     return NextResponse.json(
       { error: "An error occurred while creating/fetching the conversation." },
       { status: 500 }

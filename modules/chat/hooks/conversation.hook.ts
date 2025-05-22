@@ -4,9 +4,10 @@ import {
   startConversation,
 } from "../services/conversation.service";
 
-import { ChatSchema, Conversationschema } from "../types";
+import { ChatSchema, Conversationschema, TypingSchema } from "../types";
 import { queryClient } from "@/lib/queryClient";
 import { createChat, messageConversation } from "../services";
+import { sendTypingSignal, typingSignal } from "../services/typing.service";
 
 export const useStartConversation = () => {
   return useMutation({
@@ -55,5 +56,32 @@ export const useCreateChat = () => {
         queryClient.invalidateQueries({ queryKey: ["useMessages"] }),
       ]);
     },
+  });
+};
+
+export const useTyping = () => {
+  return useMutation({
+    mutationFn: ({ data }: { data: TypingSchema }) => sendTypingSignal(data),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["useConversations"] }),
+        queryClient.invalidateQueries({ queryKey: ["useMessages"] }),
+      ]);
+    },
+  });
+};
+
+export const useTypingById = (convesationId: string) => {
+  return useQuery({
+    queryKey: ["useTyping", convesationId],
+    queryFn: () => typingSignal(convesationId),
+
+    enabled: !!convesationId,
+    refetchInterval: 2000, // <-- auto refetch every 5 seconds
+    refetchOnWindowFocus: true, // <-- refetch when user focuses the tab
+    // staleTime: 0, // <-- data becomes stale immediately (forces fresh fetch)
+    staleTime: 0, // cache stays fresh for 5 minutes
+    // 👈 poll every 3 seconds
+    refetchIntervalInBackground: true,
   });
 };

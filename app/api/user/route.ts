@@ -52,8 +52,7 @@ export async function GET(req: NextRequest) {
       page,
       totalPages: Math.ceil(total / limit),
     });
-  } catch (error) {
-    console.error("GET /users error:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to retrieve users" },
       { status: 500 }

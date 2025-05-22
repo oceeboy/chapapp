@@ -26,8 +26,7 @@ export async function GET() {
       .sort({ updatedAt: -1 });
 
     return NextResponse.json({ conversations });
-  } catch (error) {
-    console.error("GET /conversations error:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch conversations." },
       { status: 500 }

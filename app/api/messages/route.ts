@@ -29,8 +29,7 @@ export async function GET() {
     });
 
     return NextResponse.json(messages);
-  } catch (error) {
-    console.error("GET /messages error:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to retrieve messages" },
       { status: 500 }

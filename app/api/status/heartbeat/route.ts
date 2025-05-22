@@ -17,8 +17,7 @@ export async function POST() {
     await User.updateOne({ _id: userId }, { lastSeenAt: new Date() });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("POST /status/heartbeat error:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to update online status" },
       { status: 500 }

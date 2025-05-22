@@ -69,7 +69,7 @@ export async function POST(req: Request) {
       [
         serialize("accessToken", accessToken, {
           ...cookieOptions,
-          maxAge: 60 * 60 * 24 * 2, // 2 days
+          maxAge: 60 * 15, // 15 minutes // 2 days
         }),
         serialize("refreshToken", refreshToken, {
           ...cookieOptions,
